@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đồ công nghệ tôi đang dùng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#141414;
+    --paper:#ffffff;
+    --muted:#77746e;
+    --line:#e6e3dd;
+    --line-soft:#f1efea;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{ color:inherit; }
+
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  /* ---------- HERO ---------- */
+
+  header.hero{
+    padding:96px 0 64px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .avatar{
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    background:var(--ink);
+    color:var(--paper);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    margin-bottom:28px;
+  }
+
+  h1.title{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(34px, 5vw, 48px);
+    line-height:1.15;
+    letter-spacing:-0.01em;
+    margin:0 0 18px;
+    max-width:14ch;
+  }
+
+  .intro{
+    font-size:17px;
+    line-height:1.65;
+    color:#3d3b37;
+    max-width:46ch;
+    margin:0;
+  }
+
+  .meta{
+    margin-top:28px;
+    font-size:14px;
+    color:var(--muted);
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+  }
+
+  .meta a{ text-decoration:underline; text-underline-offset:3px; }
+
+  /* ---------- CATEGORY ---------- */
+
+  .category{
+    padding-top:56px;
+  }
+
+  .category-label{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:15px;
+    color:var(--muted);
+    margin:0 0 4px;
+  }
+
+  .category-count{
+    font-size:13px;
+    color:#a8a49c;
+    margin:0 0 20px;
+  }
+
+  /* ---------- PRODUCT ROW ---------- */
+
+  .product{
+    display:grid;
+    grid-template-columns:104px 1fr auto;
+    gap:20px;
+    align-items:center;
+    padding:22px 0;
+    border-top:1px solid var(--line-soft);
+  }
+
+  .product:last-child{
+    border-bottom:1px solid var(--line-soft);
+  }
+
+  .thumb{
+    width:104px;
+    height:104px;
+    border-radius:6px;
+    background:#f4f2ee;
+    border:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+
+  .thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+
+  .thumb .fallback{
+    font-family:'Fraunces', serif;
+    font-size:28px;
+    color:#c7c3ba;
+  }
+
+  .info h3{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:19px;
+    margin:0 0 6px;
+    line-height:1.3;
+  }
+
+  .info p{
+    font-size:14px;
+    line-height:1.55;
+    color:var(--muted);
+    margin:0;
+    max-width:42ch;
+  }
+
+  .buy-col{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:10px;
+    white-space:nowrap;
+  }
+
+  .price{
+    font-size:14px;
+    font-weight:500;
+    color:var(--ink);
+  }
+
+  .buy-btn{
+    font-size:13px;
+    text-decoration:none;
+    color:var(--ink);
+    border-bottom:1px solid var(--ink);
+    padding-bottom:1px;
+    transition:opacity .15s ease;
+  }
+
+  .buy-btn:hover{ opacity:.55; }
+
+  /* ---------- FOOTER ---------- */
+
+  footer{
+    margin-top:80px;
+    padding:36px 0 60px;
+    border-top:1px solid var(--line);
+  }
+
+  .disclaimer{
+    font-size:13px;
+    line-height:1.6;
+    color:var(--muted);
+    max-width:56ch;
+    margin:0 0 18px;
+  }
+
+  .socials{
+    display:flex;
+    gap:16px;
+    font-size:13px;
+  }
+
+  .socials a{ text-decoration:underline; text-underline-offset:3px; color:var(--muted); }
+
+  /* ---------- RESPONSIVE ---------- */
+
+  @media (max-width:560px){
+    header.hero{ padding:64px 0 44px; }
+    .product{
+      grid-template-columns:72px 1fr;
+      row-gap:10px;
+    }
+    .thumb{ width:72px; height:72px; }
+    .buy-col{
+      grid-column:1 / -1;
+      flex-direction:row;
+      justify-content:space-between;
+      align-items:center;
+      padding-left:92px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .buy-btn{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="avatar">A</div>
+    <h1 class="title">Đồ công nghệ tôi đang dùng</h1>
+    <p class="intro">
+      Đây là danh sách những món đồ công nghệ mình chọn dùng hằng ngày —
+      từ tai nghe, bàn phím đến phụ kiện sạc. Không phải review thuê,
+      chỉ là những gì thật sự nằm trên bàn làm việc của mình.
+    </p>
+    <div class="meta">
+      <span>Cập nhật: Tháng 9, 2026</span>
+      <a href="#lien-he">Liên hệ</a>
+    </div>
+  </header>
+
+  <main id="danh-sach"></main>
+
+  <footer>
+    <p class="disclaimer" id="lien-he">
+      Một số liên kết trên trang là link affiliate — nếu bạn mua qua đó,
+      mình có thể nhận một khoản hoa hồng nhỏ, không phát sinh thêm chi phí
+      cho bạn. Mình chỉ giới thiệu những món mình thực sự dùng.
+    </p>
+    <div class="socials">
+      <a href="#">Instagram</a>
+      <a href="#">TikTok</a>
+      <a href="mailto:ban@example.com">Email</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  /* ============================================================
+     DANH SÁCH SẢN PHẨM
+     Sửa trực tiếp trong mảng bên dưới để thêm/xoá/sửa sản phẩm.
+     - category   : tên nhóm (sản phẩm cùng category sẽ gộp chung)
+     - name       : tên sản phẩm
+     - note       : mô tả ngắn 1-2 câu
+     - price      : giá hiển thị, ví dụ "590.000đ"
+     - link       : link affiliate của bạn
+     - image      : (tuỳ chọn) URL ảnh sản phẩm — để trống thì hiện chữ cái đầu
+  ============================================================ */
+
+  const PRODUCTS = [
+    {
+      category: "Âm thanh",
+      name: "Tai nghe Baseus",
+      note: "Đeo nhẹ, pin trâu, mình dùng mỗi ngày khi làm việc và nghe gọi.",
+      price: "690.000đ",
+      link: "#",
+      image: ""
+    },
+    {
+      category: "Âm thanh",
+      name: "[Tên sản phẩm]",
+      note: "Mô tả ngắn vì sao bạn dùng món này.",
+      price: "0đ",
+      link: "#",
+      image: ""
+    },
+    {
+      category: "Laptop & Phụ kiện",
+      name: "[Tên sản phẩm]",
+      note: "Mô tả ngắn vì sao bạn dùng món này.",
+      price: "0đ",
+      link: "#",
+      image: ""
+    },
+    {
+      category: "Bàn phím & Chuột",
+      name: "[Tên sản phẩm]",
+      note: "Mô tả ngắn vì sao bạn dùng món này.",
+      price: "0đ",
+      link: "#",
+      image: ""
+    },
+    {
+      category: "Sạc & Cáp",
+      name: "[Tên sản phẩm]",
+      note: "Mô tả ngắn vì sao bạn dùng món này.",
+      price: "0đ",
+      link: "#",
+      image: ""
+    }
+  ];
+
+  function render(){
+    const main = document.getElementById('danh-sach');
+    const groups = {};
+    PRODUCTS.forEach(p => {
+      if(!groups[p.category]) groups[p.category] = [];
+      groups[p.category].push(p);
+    });
+
+    Object.keys(groups).forEach(cat => {
+      const items = groups[cat];
+      const section = document.createElement('section');
+      section.className = 'category';
+
+      section.innerHTML = `
+        <p class="category-label">${cat}</p>
+        <p class="category-count">${items.length} món</p>
+      `;
+
+      items.forEach(p => {
+        const row = document.createElement('div');
+        row.className = 'product';
+        row.innerHTML = `
+          <div class="thumb">
+            ${p.image
+              ? `<img src="${p.image}" alt="${p.name}">`
+              : `<span class="fallback">${p.name.trim().charAt(0)}</span>`}
+          </div>
+          <div class="info">
+            <h3>${p.name}</h3>
+            <p>${p.note}</p>
+          </div>
+          <div class="buy-col">
+            <span class="price">${p.price}</span>
+            <a class="buy-btn" href="${p.link}" target="_blank" rel="noopener sponsored">Xem sản phẩm</a>
+          </div>
+        `;
+        section.appendChild(row);
+      });
+
+      main.appendChild(section);
+    });
+  }
+
+  render();
+</script>
+
+</body>
+</html>
