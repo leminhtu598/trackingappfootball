@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danh mục cổ phiếu tôi theo dõi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#141414;
+    --paper:#ffffff;
+    --muted:#77746e;
+    --line:#e6e3dd;
+    --line-soft:#f1efea;
+    --up:#1f6d4c;
+    --down:#af2e2e;
+    --up-bg:#eef5f0;
+    --down-bg:#f9eeee;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{ color:inherit; }
+
+  .wrap{
+    max-width:780px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  /* ---------- HERO ---------- */
+
+  header.hero{
+    padding:88px 0 48px;
+    border-bottom:1px solid var(--line);
+  }
+
+  h1.title{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(32px, 5vw, 46px);
+    line-height:1.15;
+    letter-spacing:-0.01em;
+    margin:0 0 16px;
+    max-width:15ch;
+  }
+
+  .intro{
+    font-size:16px;
+    line-height:1.65;
+    color:#3d3b37;
+    max-width:48ch;
+    margin:0 0 24px;
+  }
+
+  .status-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    font-size:13px;
+    color:var(--muted);
+  }
+
+  .refresh-btn{
+    font-size:13px;
+    background:none;
+    border:1px solid var(--ink);
+    border-radius:4px;
+    padding:7px 14px;
+    cursor:pointer;
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    transition:opacity .15s ease;
+  }
+
+  .refresh-btn:hover{ opacity:.6; }
+  .refresh-btn:disabled{ opacity:.35; cursor:default; }
+
+  /* ---------- SUMMARY ---------- */
+
+  .summary{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:0;
+    padding:36px 0;
+    border-bottom:1px solid var(--line);
+  }
+
+  .summary-item{
+    padding-right:20px;
+  }
+
+  .summary-item + .summary-item{
+    border-left:1px solid var(--line-soft);
+    padding-left:20px;
+  }
+
+  .summary-label{
+    font-size:13px;
+    color:var(--muted);
+    margin:0 0 8px;
+  }
+
+  .summary-value{
+    font-family:'Fraunces', serif;
+    font-size:clamp(20px, 3vw, 27px);
+    font-weight:500;
+    margin:0;
+  }
+
+  .summary-sub{
+    font-size:13px;
+    margin-top:6px;
+  }
+
+  .pos{ color:var(--up); }
+  .neg{ color:var(--down); }
+
+  /* ---------- HOLDINGS ---------- */
+
+  .category{ padding-top:44px; }
+
+  .category-label{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:15px;
+    color:var(--muted);
+    margin:0 0 20px;
+  }
+
+  .holding{
+    padding:24px 0;
+    border-top:1px solid var(--line-soft);
+  }
+
+  .holding:last-child{
+    border-bottom:1px solid var(--line-soft);
+  }
+
+  .holding-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:16px;
+    margin-bottom:16px;
+  }
+
+  .ticker-block{ display:flex; align-items:baseline; gap:10px; }
+
+  .ticker{
+    font-family:'Fraunces', serif;
+    font-size:22px;
+    font-weight:500;
+  }
+
+  .company{
+    font-size:13px;
+    color:var(--muted);
+  }
+
+  .pnl-badge{
+    font-size:14px;
+    font-weight:500;
+    padding:4px 10px;
+    border-radius:4px;
+    white-space:nowrap;
+  }
+
+  .pnl-badge.pos{ background:var(--up-bg); color:var(--up); }
+  .pnl-badge.neg{ background:var(--down-bg); color:var(--down); }
+
+  .holding-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:16px;
+  }
+
+  .field-label{
+    font-size:12px;
+    color:var(--muted);
+    margin:0 0 6px;
+  }
+
+  .field-value{
+    font-size:15px;
+    margin:0;
+  }
+
+  .price-input{
+    width:100%;
+    font-family:'JetBrains Mono', monospace;
+    font-size:15px;
+    border:none;
+    border-bottom:1px solid var(--line);
+    background:transparent;
+    padding:2px 0 4px;
+    color:var(--ink);
+  }
+
+  .price-input:focus{
+    outline:none;
+    border-bottom-color:var(--ink);
+  }
+
+  .price-source{
+    font-size:11px;
+    color:#a8a49c;
+    margin-top:5px;
+  }
+
+  /* ---------- FOOTER ---------- */
+
+  footer{
+    margin-top:64px;
+    padding:32px 0 60px;
+    border-top:1px solid var(--line);
+  }
+
+  .disclaimer{
+    font-size:13px;
+    line-height:1.65;
+    color:var(--muted);
+    max-width:58ch;
+    margin:0;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+
+  @media (max-width:640px){
+    .summary{ grid-template-columns:1fr; gap:20px; }
+    .summary-item{ padding:0 !important; border:none !important; }
+    .summary-item + .summary-item{ border-top:1px solid var(--line-soft) !important; padding-top:20px !important; }
+    .holding-grid{ grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="hero">
+    <h1 class="title">Danh mục cổ phiếu tôi theo dõi</h1>
+    <p class="intro">
+      Đây là những mã mình đang nắm giữ, cùng lãi/lỗ tính theo giá hiện tại.
+      Trang sẽ thử lấy giá tự động; nếu không lấy được, bạn có thể nhập giá thủ công vào từng ô giá.
+    </p>
+    <div class="status-row">
+      <span id="lastUpdated">Chưa cập nhật giá</span>
+      <button class="refresh-btn" id="refreshBtn" onclick="fetchPrices()">Làm mới giá</button>
+    </div>
+  </header>
+
+  <section class="summary">
+    <div class="summary-item">
+      <p class="summary-label">Tổng vốn đã bỏ ra</p>
+      <p class="summary-value mono" id="totalCost">0đ</p>
+    </div>
+    <div class="summary-item">
+      <p class="summary-label">Giá trị hiện tại</p>
+      <p class="summary-value mono" id="totalValue">0đ</p>
+    </div>
+    <div class="summary-item">
+      <p class="summary-label">Lãi / lỗ</p>
+      <p class="summary-value mono" id="totalPnl">0đ</p>
+      <p class="summary-sub" id="totalPnlPct">0%</p>
+    </div>
+  </section>
+
+  <main class="category">
+    <p class="category-label">Cổ phiếu đang nắm giữ</p>
+    <div id="holdingsList"></div>
+  </main>
+
+  <footer>
+    <p class="disclaimer">
+      Giá tự động (nếu lấy được) tham khảo từ nguồn dữ liệu công khai của TCBS, chỉ mang tính tham khảo,
+      có thể trễ hoặc không chính xác tuyệt đối so với bảng giá chính thức của sàn HOSE.
+      Nếu trang không tự lấy được giá, hãy nhập giá hiện tại vào từng ô để tính lãi/lỗ chính xác hơn.
+      Đây không phải lời khuyên đầu tư.
+    </p>
+  </footer>
+
+</div>
+
+<script>
+  /* ============================================================
+     DANH MỤC NẮM GIỮ
+     Sửa trực tiếp trong mảng bên dưới:
+     - ticker    : mã cổ phiếu
+     - name      : tên công ty
+     - quantity  : số lượng cổ phiếu đang nắm
+     - avgCost   : giá vốn trung bình mỗi cổ phiếu (đồng)
+     - price     : giá hiện tại mặc định (đồng) — sẽ được ghi đè nếu lấy giá tự động thành công
+  ============================================================ */
+
+  const HOLDINGS = [
+    { ticker: "VNM", name: "Vinamilk",              quantity: 100, avgCost: 62000, price: 62000, source: "manual" },
+    { ticker: "MWG", name: "Thế Giới Di Động",      quantity: 100, avgCost: 55000, price: 55000, source: "manual" },
+    { ticker: "VIC", name: "Vingroup",              quantity: 100, avgCost: 45000, price: 45000, source: "manual" }
+  ];
+
+  function formatVND(n){
+    return Math.round(n).toLocaleString('vi-VN') + 'đ';
+  }
+
+  function formatPct(n){
+    const sign = n > 0 ? '+' : '';
+    return sign + n.toFixed(2) + '%';
+  }
+
+  function render(){
+    const list = document.getElementById('holdingsList');
+    list.innerHTML = '';
+
+    let totalCost = 0, totalValue = 0;
+
+    HOLDINGS.forEach((h, i) => {
+      const cost = h.quantity * h.avgCost;
+      const value = h.quantity * h.price;
+      const pnl = value - cost;
+      const pnlPct = cost > 0 ? (pnl / cost) * 100 : 0;
+      totalCost += cost;
+      totalValue += value;
+
+      const isPos = pnl >= 0;
+
+      const row = document.createElement('div');
+      row.className = 'holding';
+      row.innerHTML = `
+        <div class="holding-top">
+          <div class="ticker-block">
+            <span class="ticker">${h.ticker}</span>
+            <span class="company">${h.name}</span>
+          </div>
+          <span class="pnl-badge ${isPos ? 'pos' : 'neg'}">${formatVND(pnl)} · ${formatPct(pnlPct)}</span>
+        </div>
+        <div class="holding-grid">
+          <div>
+            <p class="field-label">Số lượng</p>
+            <p class="field-value mono">${h.quantity.toLocaleString('vi-VN')} CP</p>
+          </div>
+          <div>
+            <p class="field-label">Giá vốn / CP</p>
+            <p class="field-value mono">${formatVND(h.avgCost)}</p>
+          </div>
+          <div>
+            <p class="field-label">Giá hiện tại / CP</p>
+            <input class="price-input mono" type="number" value="${h.price}" data-index="${i}" onchange="updatePrice(this)">
+            <p class="price-source">${h.source === 'auto' ? 'Tự động' : 'Nhập thủ công'}</p>
+          </div>
+          <div>
+            <p class="field-label">Giá trị hiện tại</p>
+            <p class="field-value mono">${formatVND(value)}</p>
+          </div>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+
+    const totalPnl = totalValue - totalCost;
+    const totalPnlPct = totalCost > 0 ? (totalPnl / totalCost) * 100 : 0;
+
+    document.getElementById('totalCost').textContent = formatVND(totalCost);
+    document.getElementById('totalValue').textContent = formatVND(totalValue);
+
+    const pnlEl = document.getElementById('totalPnl');
+    pnlEl.textContent = formatVND(totalPnl);
+    pnlEl.className = 'summary-value mono ' + (totalPnl >= 0 ? 'pos' : 'neg');
+
+    const pnlPctEl = document.getElementById('totalPnlPct');
+    pnlPctEl.textContent = formatPct(totalPnlPct);
+    pnlPctEl.className = 'summary-sub ' + (totalPnl >= 0 ? 'pos' : 'neg');
+  }
+
+  function updatePrice(input){
+    const i = parseInt(input.dataset.index, 10);
+    const val = parseFloat(input.value);
+    if(!isNaN(val) && val > 0){
+      HOLDINGS[i].price = val;
+      HOLDINGS[i].source = 'manual';
+      render();
+    }
+  }
+
+  async function fetchPrices(){
+    const btn = document.getElementById('refreshBtn');
+    const statusEl = document.getElementById('lastUpdated');
+    btn.disabled = true;
+    statusEl.textContent = 'Đang lấy giá...';
+
+    const tickers = HOLDINGS.map(h => h.ticker).join(',');
+    let success = false;
+
+    try{
+      const res = await fetch(`https://apipubaws.tcbs.com.vn/stock-insight/v1/stock/second-tc-price?tickers=${tickers}`);
+      if(res.ok){
+        const json = await res.json();
+        const rows = json.data || json;
+        if(Array.isArray(rows)){
+          rows.forEach(row => {
+            const t = row.t || row.ticker || row.symbol;
+            const p = row.cp ?? row.matchPrice ?? row.price;
+            if(t && p){
+              const h = HOLDINGS.find(x => x.ticker === t);
+              // TCBS trả giá theo đơn vị nghìn đồng trong một số API — quy đổi nếu số quá nhỏ
+              if(h){
+                const priceVnd = p < 1000 ? p * 1000 : p;
+                h.price = priceVnd;
+                h.source = 'auto';
+                success = true;
+              }
+            }
+          });
+        }
+      }
+    }catch(e){
+      success = false;
+    }
+
+    render();
+    btn.disabled = false;
+
+    const now = new Date().toLocaleTimeString('vi-VN');
+    statusEl.textContent = success
+      ? `Đã cập nhật giá tự động lúc ${now}`
+      : `Không lấy được giá tự động (${now}) — vui lòng nhập giá thủ công`;
+  }
+
+  render();
+  fetchPrices();
+</script>
+
+</body>
+</html>
